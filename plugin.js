@@ -27,7 +27,7 @@ var TennuUserAlert = {
 
                     if (targets.length > 0) {
                         targets.forEach(function(target){
-                            client.notice(target.setter, format("At your request, we are notifying you that %s has returned.", targets));
+                            client.notice(target.setter, format("At your request, we are notifying you that %s has returned.", target.target));
                         });
                     }
 
