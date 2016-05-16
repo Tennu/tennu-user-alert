@@ -1,6 +1,6 @@
 {
   "name": "tennu-user-alert",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Alerts a user when another user talks in the channel.",
   "main": "plugin.js",
   "repository": {
