@@ -9,6 +9,11 @@ var noticeResponse = function(msg) {
 }
 
 var TennuUserAlert = {
+    configDefaults: {
+        "user-alert": {
+            "notice": false
+        }
+    },    
     init: function(client) {
 
         const helps = {
@@ -19,6 +24,14 @@ var TennuUserAlert = {
         };
 
         var memDb = require("./lib/memory-database");
+        var userAlertConfig = client.config("user-alert");
+        
+        var alertmethod = "";
+        if(userAlertConfig.notice){
+            alertmethod = "notice";
+        } else {
+            alertmethod = "say";
+        }
 
         return {
             handlers: {
@@ -27,7 +40,7 @@ var TennuUserAlert = {
 
                     if (targets.length > 0) {
                         targets.forEach(function(target){
-                            client.notice(target.setter, format("At your request, we are notifying you that %s has returned.", target.target));
+                            client[alertmethod](target.setter, format("At your request, we are notifying you that %s has returned.", target.target));
                         });
                     }
 
