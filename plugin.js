@@ -11,7 +11,7 @@ var noticeResponse = function(msg) {
 var TennuUserAlert = {
     configDefaults: {
         "user-alert": {
-            "notice": false
+            "notice": true
         }
     },    
     init: function(client) {
@@ -36,11 +36,15 @@ var TennuUserAlert = {
         return {
             handlers: {
                 "privmsg": function(message) {
-                    var targets = memDb.find(message.nickname);
+                    var alerts = memDb.find(message.nickname);
 
-                    if (targets.length > 0) {
-                        targets.forEach(function(target){
-                            client[alertmethod](target.setter, format("At your request, we are notifying you that %s has returned.", target.target));
+                    if (alerts.length > 0) {
+                        alerts.forEach(function(alert){
+                            var message = format("At your request, we are notifying you that %s has returned.", alert.target);
+                            if(alert.note){
+                                message += format(" Note: ", alert.note);
+                            }
+                            client[alertmethod](alert.setter, message);
                         });
                     }
 
@@ -53,7 +57,14 @@ var TennuUserAlert = {
 
                     var target = message.args[0]
 
-                    memDb.add(message.nickname, target);
+                    var note = null;
+                    
+                    // Do we have a note?
+                    if(message.args.length > 1){
+                        note = message.args.slice(1, message.args.length).join(' ');
+                    }
+
+                    memDb.add(message.nickname, target, note);
 
                     return noticeResponse(format("We will ping you when %s talks next.", target));
 

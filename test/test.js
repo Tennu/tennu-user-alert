@@ -4,6 +4,11 @@ var format = require("util").format;
 var client = {
     notice: function(target, message) {
         return;
+    },
+    config: function(){
+        return {
+            "notice": true
+        };
     }
 };
 
@@ -34,22 +39,24 @@ describe('user-alert', function() {
 
         plugin.testExports.memDb.data.should.containEql({
             setter: firstSettingMessage.nickname,
-            target: firstSettingMessage.args[0]
+            target: firstSettingMessage.args[0],
+            note: null
         });
 
     });
 
-    it('Should remove memory item when target speaks', function() {
+    it('Should remove memory item when target speaks. Case insensitive.', function() {
 
         var message = {
-            nickname: "testtarget123",
+            nickname: "Testtarget123",
         };
 
         plugin.handlers["privmsg"](message);
 
         plugin.testExports.memDb.data.should.not.containEql({
             setter: firstSettingMessage.nickname,
-            target: firstSettingMessage.args[0]
+            target: firstSettingMessage.args[0],
+            note: null
         });
 
     });
